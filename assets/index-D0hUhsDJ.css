@@ -9,3 +9,34 @@
 @media (min-width: 768px) { .testimonial-item { flex: 0 0 45%; } }
 @media (min-width: 1024px) { .testimonial-item { flex: 0 0 30%; } }
 .quote-icon { position: absolute; top: -10px; left: 20px; font-size: 3rem; color: var(--primary); opacity: 0.2; font-family: serif; }
+
+
+/* Efeito de Espiar (Peek) no Carrossel */
+.testimonial-container {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    gap: 1rem !important;
+    padding: 1rem 1.5rem !important; /* Padding lateral para o primeiro card não colar na borda */
+    scrollbar-width: none !important;
+}
+.testimonial-container::-webkit-scrollbar {
+    display: none !important;
+}
+.testimonial-item {
+    flex: 0 0 85% !important; /* Ocupa 85%, sobrando 15% para o próximo card aparecer */
+    scroll-snap-align: start !important; /* Alinha o card no início para o próximo aparecer na direita */
+    min-width: 0 !important;
+}
+
+@media (min-width: 768px) {
+    .testimonial-item {
+        flex: 0 0 45% !important; /* No tablet mostra 2 e um pedaço do 3º */
+    }
+}
+
+@media (min-width: 1024px) {
+    .testimonial-item {
+        flex: 0 0 31% !important; /* No desktop mostra 3 e um pedaço do 4º */
+    }
+}
