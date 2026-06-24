@@ -26,123 +26,116 @@
 
     function updateCopy() {
         // Top Bar
-        const topBar = document.querySelector('div.bg-primary.text-primary-foreground');
-        if (topBar) topBar.textContent = NEW_COPY.topBar;
+        const topBar = document.querySelector('div.bg-primary.text-primary-foreground') || document.querySelector('.bg-primary');
+        if (topBar) {
+            const p = topBar.querySelector('p');
+            if (p) p.textContent = NEW_COPY.topBar;
+            else topBar.textContent = NEW_COPY.topBar;
+        }
 
         // Hero
-        const heroHeadline = document.querySelector('h1');
-        if (heroHeadline) heroHeadline.textContent = NEW_COPY.hero.headline;
+        const h1 = document.querySelector('h1');
+        if (h1) h1.textContent = NEW_COPY.hero.headline;
 
-        const heroSubtitle = document.querySelector('h1 + p');
-        if (heroSubtitle) heroSubtitle.textContent = NEW_COPY.hero.subtitle;
+        const subtitle = document.querySelector('h1 + p');
+        if (subtitle) subtitle.textContent = NEW_COPY.hero.subtitle;
 
-        const heroCTA = document.querySelector('main section:first-of-type button');
-        if (heroCTA) {
-            const span = heroCTA.querySelector('span');
+        const ctaBtn = document.querySelector('main section button');
+        if (ctaBtn) {
+            const span = ctaBtn.querySelector('span');
             if (span) span.textContent = NEW_COPY.hero.cta;
-            else heroCTA.textContent = NEW_COPY.hero.cta;
+            else ctaBtn.textContent = NEW_COPY.hero.cta;
         }
 
-        const socialProof = document.querySelector('main section:first-of-type div.flex.items-center.gap-2 span');
-        if (socialProof) socialProof.textContent = NEW_COPY.hero.socialProof;
+        const socialProof = document.querySelector('.items-center.gap-2 span');
+        if (socialProof && socialProof.textContent.includes('clínicas')) {
+            socialProof.textContent = NEW_COPY.hero.socialProof;
+        }
 
-        // Problem Section
+        // Sections
         const sections = document.querySelectorAll('main section');
-        if (sections[1]) {
-            const h2 = sections[1].querySelector('h2');
-            if (h2) h2.textContent = NEW_COPY.problem.title;
-            const p = sections[1].querySelector('p');
-            if (p) p.textContent = NEW_COPY.problem.body;
-        }
+        sections.forEach(section => {
+            const h2 = section.querySelector('h2');
+            const p = section.querySelector('p');
+            
+            if (h2 && h2.textContent.includes('indicação')) {
+                h2.textContent = NEW_COPY.problem.title;
+                if (p) p.textContent = NEW_COPY.problem.body;
+            }
+            
+            if (h2 && h2.textContent.includes('agenda cheia')) {
+                h2.textContent = NEW_COPY.howItWorks.title;
+                const items = section.querySelectorAll('div.grid > div');
+                items.forEach((item, i) => {
+                    if (NEW_COPY.howItWorks.items[i]) {
+                        const h3 = item.querySelector('h3');
+                        const itemP = item.querySelector('p');
+                        if (h3) h3.textContent = NEW_COPY.howItWorks.items[i].title;
+                        if (itemP) itemP.textContent = NEW_COPY.howItWorks.items[i].text;
+                    }
+                });
+            }
 
-        // Solution Section
-        if (sections[2]) {
-            const p = sections[2].querySelector('p');
-            if (p) p.textContent = NEW_COPY.solution.body;
-        }
-
-        // How It Works
-        if (sections[3]) {
-            const h2 = sections[3].querySelector('h2');
-            if (h2) h2.textContent = NEW_COPY.howItWorks.title;
-            const items = sections[3].querySelectorAll('div.grid > div');
-            items.forEach((item, i) => {
-                if (NEW_COPY.howItWorks.items[i]) {
-                    const h3 = item.querySelector('h3');
-                    if (h3) h3.textContent = NEW_COPY.howItWorks.items[i].title;
-                    const p = item.querySelector('p');
-                    if (p) p.textContent = NEW_COPY.howItWorks.items[i].text;
-                }
-            });
-        }
+            if (!h2 && p && p.textContent.includes('entendemos sua clínica')) {
+                 p.textContent = NEW_COPY.solution.body;
+            }
+        });
     }
 
     function setupAnimations() {
-        const observerOptions = {
-            threshold: 0.1
-        };
-
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('animated');
                     entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translate(0, 0)';
+                    entry.target.style.transform = 'translateY(0)';
                     observer.unobserve(entry.target);
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1 });
 
-        // Find elements that should animate
-        const animatable = document.querySelectorAll('section, div.grid > div, h1, h2, h3, p');
-        animatable.forEach(el => {
-            if (!el.classList.contains('animated')) {
+        document.querySelectorAll('section, h1, h2, h3, p, button').forEach(el => {
+            if (!el.classList.contains('animated') && !el.closest('nav')) {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(20px)';
-                el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
                 observer.observe(el);
             }
         });
     }
 
     function addTestimonials() {
-        const testimonialsSection = Array.from(document.querySelectorAll('section')).find(s => s.textContent.includes('depoimento') || s.textContent.includes('Dra.'));
-        if (testimonialsSection) {
-            const container = testimonialsSection.querySelector('div.flex') || testimonialsSection.querySelector('div.grid');
-            if (container) {
-                // Add horizontal scroll styles
-                container.style.display = 'flex';
-                container.style.overflowX = 'auto';
-                container.style.scrollSnapType = 'x mandatory';
-                container.style.gap = '1.5rem';
-                container.style.paddingBottom = '1rem';
+        const testimonialSection = Array.from(document.querySelectorAll('section')).find(s => s.textContent.includes('O que dizem nossos clientes'));
+        if (testimonialSection && !testimonialSection.dataset.fixed) {
+            const container = testimonialSection.querySelector('.grid') || testimonialSection.querySelector('.flex');
+            if (container && container.children.length > 0) {
+                testimonialSection.dataset.fixed = "true";
+                container.className = "flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 no-scrollbar";
+                container.style.display = "flex";
+                container.style.overflowX = "auto";
                 
-                const originalTestimonial = container.children[0];
-                if (originalTestimonial) {
-                    for (let i = 0; i < 3; i++) {
-                        const clone = originalTestimonial.cloneNode(true);
-                        clone.style.flex = '0 0 85%';
-                        clone.style.scrollSnapAlign = 'center';
-                        container.appendChild(clone);
-                    }
+                const original = container.children[0];
+                for (let i = 0; i < 3; i++) {
+                    const clone = original.cloneNode(true);
+                    clone.className += " shrink-0 w-[85%] md:w-[400px] snap-center";
+                    container.appendChild(clone);
                 }
             }
         }
     }
 
-    // Run on load and whenever DOM changes (since it's React)
+    let timeout;
     const observer = new MutationObserver(() => {
-        updateCopy();
-        setupAnimations();
-        addTestimonials();
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            updateCopy();
+            setupAnimations();
+            addTestimonials();
+        }, 100);
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
-    
-    // Initial run
-    window.addEventListener('DOMContentLoaded', () => {
-        updateCopy();
-        setupAnimations();
-        addTestimonials();
-    });
+    observer.observe(document.getElementById('root'), { childList: true, subtree: true });
+    updateCopy();
+    setupAnimations();
+    addTestimonials();
 })();
