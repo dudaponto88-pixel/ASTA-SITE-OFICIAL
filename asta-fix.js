@@ -14,12 +14,12 @@
             title: "Da análise à agenda cheia.",
             items: [
                 { title: "Diagnóstico", text: "Mapeamos sua clínica, seu mercado e seus concorrentes. Identificamos o que está travando seu crescimento." },
-                { title: "Estrategia", text: "Um plano construído para a sua realidade. Canal certo, mensagem certa, paciente certo." },
+                { title: "Estratégia", text: "Um plano construído para a sua realidade. Canal certo, mensagem certa, paciente certo." },
                 { title: "Execução", text: "Implementamos, acompanhamos diariamente e ajustamos. Você acompanha tudo em tempo real." }
             ]
         },
         whatWeDo: {
-            title: "Um ecossistema completo de captação.",
+            title: "O que fazemos:",
             items: [
                 { title: "Tráfego pago", text: "Google Ads e Meta Ads com estratégia real de conversão." },
                 { title: "Presença digital", text: "Autoridade construída nos canais certos para sua especialidade." },
@@ -61,10 +61,13 @@
         document.querySelectorAll('main section').forEach(section => {
             const h2 = section.querySelector('h2');
             const p = section.querySelector('p');
-            if (h2 && (h2.textContent.includes('indicação') || h2.textContent.includes('escolher'))) {
-                h2.textContent = NEW_COPY.problem.title;
-                if (p) p.textContent = NEW_COPY.problem.body;
+            
+            // Renomear seção "Por que escolher ASTA" para "O que fazemos:"
+            if (h2 && (h2.textContent.includes('indicação') || h2.textContent.includes('escolher') || h2.textContent.includes('Por que'))) {
+                h2.textContent = NEW_COPY.whatWeDo.title;
+                if (p && !p.textContent.includes('Indicação')) p.textContent = ""; // Limpar subtítulo se necessário
             }
+
             if (h2 && h2.textContent.includes('agenda cheia')) {
                 h2.textContent = NEW_COPY.howItWorks.title;
                 const items = section.querySelectorAll('div.grid > div');
@@ -94,7 +97,7 @@
 
     function addTestimonials() {
         const testimonialSection = Array.from(document.querySelectorAll('section')).find(s => s.textContent.includes('clientes') || s.textContent.includes('Histórias Reais'));
-        if (testimonialSection && !testimonialSection.dataset.fixedFinalPremiumFinalCorrected) {
+        if (testimonialSection && !testimonialSection.dataset.fixedFinalPremiumFinalTitle) {
             const h2 = testimonialSection.querySelector('h2');
             if (h2) h2.textContent = NEW_COPY.testimonials.title;
 
@@ -103,7 +106,7 @@
 
             const container = testimonialSection.querySelector('.grid') || testimonialSection.querySelector('.flex') || testimonialSection.querySelector('div > div > div');
             if (container) {
-                testimonialSection.dataset.fixedFinalPremiumFinalCorrected = "true";
+                testimonialSection.dataset.fixedFinalPremiumFinalTitle = "true";
                 container.style.display = "grid";
                 container.style.gap = "20px";
                 container.className = "grid grid-cols-1 md:grid-cols-3 gap-6";
@@ -140,12 +143,12 @@
 
                 container.innerHTML = NEW_COPY.testimonials.items.map(data => `
                     <div class="testimonial-card-fix">
-                        <span style="font-size: 32px; color: #00C8FF; opacity: 0.4; line-height: 1; margin-bottom: 8px; font-family: serif;">"</span>
-                        <p style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 400; color: #C4CFDF; line-height: 1.7; margin-bottom: 24px;">${data.text}</p>
-                        <div style="height: 1px; background: rgba(255, 255, 255, 0.08); width: 100%; margin-top: auto; margin-bottom: 16px;"></div>
-                        <div style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: #00C8FF; letter-spacing: 0.06em; text-transform: uppercase;">
+                        <div style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: #00C8FF; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px;">
                             ${data.name} · ${data.spec}
                         </div>
+                        <span style="font-size: 32px; color: #00C8FF; opacity: 0.4; line-height: 1; margin-bottom: 4px; font-family: serif;">"</span>
+                        <p style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 400; color: #C4CFDF; line-height: 1.7; margin-bottom: 0;">${data.text}</p>
+                        <div style="height: 1px; background: rgba(255, 255, 255, 0.08); width: 100%; margin-top: 24px; display: none;"></div>
                     </div>
                 `).join('');
             }
