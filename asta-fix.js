@@ -10,16 +10,8 @@
         },
         problem: { title: "", body: "Indicação não escala. Enquanto isso, pacientes estão pesquisando no Google e no Instagram e escolhendo quem aparece primeiro." },
         solution: { body: "Antes de qualquer campanha, entendemos sua clínica. Quais procedimentos têm mais margem, quem é seu paciente ideal, onde está a perda de captação hoje. Só depois disso agimos." },
-        howItWorks: {
-            title: "Da análise à agenda cheia.",
-            items: [
-                { title: "Diagnóstico", text: "Mapeamos sua clínica, seu mercado e seus concorrentes. Identificamos o que está travando seu crescimento." },
-                { title: "Estratégia", text: "Um plano construído para a sua realidade. Canal certo, mensagem certa, paciente certo." },
-                { title: "Execução", text: "Implementamos, acompanhamos diariamente e ajustamos. Você acompanha tudo em tempo real." }
-            ]
-        },
         whatWeDo: {
-            title: "Um ecossistema completo de captação.",
+            title: "O que fazemos:",
             items: [
                 { title: "Tráfego pago", text: "Google Ads e Meta Ads com estratégia real de conversão." },
                 { title: "Presença digital", text: "Autoridade construída nos canais certos para sua especialidade." },
@@ -27,6 +19,14 @@
                 { title: "Automações", text: "Velocidade no primeiro contato. Lead que espera, vai embora." },
                 { title: "Dashboards", text: "Decisões baseadas em dados, não em intuição." },
                 { title: "Consultoria estratégica", text: "Acompanhamento contínuo sem contrato engessado." }
+            ]
+        },
+        howItWorks: {
+            title: "Da análise à agenda cheia.",
+            items: [
+                { title: "Diagnóstico", text: "Mapeamos sua clínica, seu mercado e seus concorrentes. Identificamos o que está travando seu crescimento." },
+                { title: "Estratégia", text: "Um plano construído para a sua realidade. Canal certo, mensagem certa, paciente certo." },
+                { title: "Execução", text: "Implementamos, acompanhamos diariamente e ajustamos. Você acompanha tudo em tempo real." }
             ]
         },
         ctaFinal: {
@@ -62,19 +62,33 @@
             const h2 = section.querySelector('h2');
             const p = section.querySelector('p');
             
-            // Seção Problema
+            // Seção Problema / Solução
             if (h2 && (h2.textContent.includes('indicação') || h2.textContent.includes('escolher') || h2.textContent.includes('Por que'))) {
                 if (h2.textContent.includes('indicação') || section.textContent.includes('Indicação')) {
                     h2.textContent = NEW_COPY.problem.title;
                     if (p) p.textContent = NEW_COPY.problem.body;
                 } else {
-                    // Renomear seção "O que fazemos" (ex-Por que escolher)
-                    h2.textContent = "O que fazemos:";
+                    // Esta seção será "O que fazemos:"
+                    h2.textContent = NEW_COPY.whatWeDo.title;
                     if (p) p.textContent = "";
                 }
             }
 
-            // Seção Como Funciona (Título e Itens únicos)
+            // Seção O QUE FAZEMOS (Ecossistema)
+            if (h2 && (h2.textContent.includes('ecossistema') || h2.textContent.includes('fazemos'))) {
+                h2.textContent = NEW_COPY.whatWeDo.title;
+                const items = section.querySelectorAll('div.grid > div');
+                items.forEach((item, i) => {
+                    if (NEW_COPY.whatWeDo.items[i]) {
+                        const h3 = item.querySelector('h3');
+                        const itemP = item.querySelector('p');
+                        if (h3) h3.textContent = NEW_COPY.whatWeDo.items[i].title;
+                        if (itemP) itemP.textContent = NEW_COPY.whatWeDo.items[i].text;
+                    }
+                });
+            }
+
+            // Seção COMO FUNCIONA
             if (h2 && (h2.textContent.includes('agenda cheia') || h2.textContent.includes('Funciona'))) {
                 h2.textContent = NEW_COPY.howItWorks.title;
                 const items = section.querySelectorAll('div.grid > div');
@@ -87,26 +101,12 @@
                     }
                 });
             }
-
-            // Seção Ecossistema / O Que Fazemos (Título e Itens únicos)
-            if (h2 && (h2.textContent.includes('ecossistema') || h2.textContent.includes('completo'))) {
-                h2.textContent = NEW_COPY.whatWeDo.title;
-                const items = section.querySelectorAll('div.grid > div');
-                items.forEach((item, i) => {
-                    if (NEW_COPY.whatWeDo.items[i]) {
-                        const h3 = item.querySelector('h3');
-                        const itemP = item.querySelector('p');
-                        if (h3) h3.textContent = NEW_COPY.whatWeDo.items[i].title;
-                        if (itemP) itemP.textContent = NEW_COPY.whatWeDo.items[i].text;
-                    }
-                });
-            }
         });
     }
 
     function addTestimonials() {
         const testimonialSection = Array.from(document.querySelectorAll('section')).find(s => s.textContent.includes('clientes') || s.textContent.includes('Histórias Reais'));
-        if (testimonialSection && !testimonialSection.dataset.fixedFinalPremiumFinalCorrectedV3) {
+        if (testimonialSection && !testimonialSection.dataset.fixedFinalPremiumFinalCorrectedV4) {
             const h2 = testimonialSection.querySelector('h2');
             if (h2) h2.textContent = NEW_COPY.testimonials.title;
 
@@ -115,7 +115,7 @@
 
             const container = testimonialSection.querySelector('.grid') || testimonialSection.querySelector('.flex') || testimonialSection.querySelector('div > div > div');
             if (container) {
-                testimonialSection.dataset.fixedFinalPremiumFinalCorrectedV3 = "true";
+                testimonialSection.dataset.fixedFinalPremiumFinalCorrectedV4 = "true";
                 container.style.display = "grid";
                 container.style.gap = "20px";
                 container.className = "grid grid-cols-1 md:grid-cols-3 gap-6";
@@ -155,7 +155,6 @@
                         <div style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: #00C8FF; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px;">
                             ${data.name} · ${data.spec}
                         </div>
-                        <span style="font-size: 32px; color: #00C8FF; opacity: 0.4; line-height: 1; margin-bottom: 4px; font-family: serif;">"</span>
                         <p style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 400; color: #C4CFDF; line-height: 1.7; margin-bottom: 0;">${data.text}</p>
                     </div>
                 `).join('');
