@@ -14,7 +14,7 @@
             title: "Da análise à agenda cheia.",
             items: [
                 { title: "Diagnóstico", text: "Mapeamos sua clínica, seu mercado e seus concorrentes. Identificamos o que está travando seu crescimento." },
-                { title: "Estratégia", text: "Um plano construído para a sua realidade. Canal certo, mensagem certa, paciente certo." },
+                { title: "Estrategia", text: "Um plano construído para a sua realidade. Canal certo, mensagem certa, paciente certo." },
                 { title: "Execução", text: "Implementamos, acompanhamos diariamente e ajustamos. Você acompanha tudo em tempo real." }
             ]
         },
@@ -94,22 +94,20 @@
 
     function addTestimonials() {
         const testimonialSection = Array.from(document.querySelectorAll('section')).find(s => s.textContent.includes('clientes') || s.textContent.includes('Histórias Reais'));
-        if (testimonialSection && !testimonialSection.dataset.fixedFinalPremiumFinal) {
+        if (testimonialSection && !testimonialSection.dataset.fixedFinalPremiumFinalCorrected) {
             const h2 = testimonialSection.querySelector('h2');
             if (h2) h2.textContent = NEW_COPY.testimonials.title;
 
-            // Remover subtítulo desnecessário
             const subtitle = Array.from(testimonialSection.querySelectorAll('p')).find(p => p.textContent.includes('Clínicas que transformaram'));
             if (subtitle) subtitle.remove();
 
             const container = testimonialSection.querySelector('.grid') || testimonialSection.querySelector('.flex') || testimonialSection.querySelector('div > div > div');
             if (container) {
-                testimonialSection.dataset.fixedFinalPremiumFinal = "true";
+                testimonialSection.dataset.fixedFinalPremiumFinalCorrected = "true";
                 container.style.display = "grid";
                 container.style.gap = "20px";
                 container.className = "grid grid-cols-1 md:grid-cols-3 gap-6";
                 
-                // Estilos mobile via CSS injetado
                 const style = document.createElement('style');
                 style.textContent = `
                     @media (max-width: 768px) {
