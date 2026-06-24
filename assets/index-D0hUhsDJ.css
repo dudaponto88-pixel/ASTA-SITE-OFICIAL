@@ -40,3 +40,39 @@
         flex: 0 0 31% !important; /* No desktop mostra 3 e um pedaço do 4º */
     }
 }
+
+/* FINAL FIX FOR CAROUSEL PEEK */
+.testimonial-container {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    gap: 1.5rem !important;
+    padding: 0 1.5rem 2rem 1.5rem !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+.testimonial-container::-webkit-scrollbar {
+    display: none !important;
+}
+.testimonial-item {
+    flex: 0 0 85% !important;
+    width: 85% !important;
+    min-width: 85% !important;
+    scroll-snap-align: start !important;
+    margin-right: 1rem !important;
+}
+@media (min-width: 768px) {
+    .testimonial-item {
+        flex: 0 0 45% !important;
+        width: 45% !important;
+        min-width: 45% !important;
+    }
+}
+@media (min-width: 1024px) {
+    .testimonial-item {
+        flex: 0 0 30% !important;
+        width: 30% !important;
+        min-width: 30% !important;
+    }
+}
