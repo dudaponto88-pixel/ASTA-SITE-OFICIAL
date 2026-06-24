@@ -100,3 +100,30 @@
     transform: translateY(-5px) !important;
     transition: transform 0.3s ease !important;
 }
+
+/* SENIOR FRONT-END: INTERSECTION OBSERVER ANIMATIONS */
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.reveal-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Remover animações antigas que causavam bugs */
+[data-aos], .animate-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+}
+
+/* Re-aplicar apenas para nossa nova classe controlada */
+.reveal-on-scroll.animated {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out !important;
+}
