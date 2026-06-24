@@ -21,11 +21,15 @@
                 { title: "Estratégia", text: "Um plano construído para a sua realidade. Canal certo, mensagem certa, paciente certo." },
                 { title: "Execução", text: "Implementamos, acompanhamos diariamente e ajustamos. Você acompanha tudo em tempo real." }
             ]
-        }
+        },
+        testimonials: [
+            { text: "Finalmente entendo de onde vêm meus pacientes. Isso mudou a forma como gerencio a clínica.", author: "Dr. J.S.", specialty: "Odontologia" },
+            { text: "Minha clínica estava no mesmo nível há dois anos. Em poucos meses isso mudou.", author: "Dra. M.C.", specialty: "Estética" },
+            { text: "Além dos pacientes, a organização interna da clínica mudou. Não esperava isso.", author: "Dra. A.P.", specialty: "Harmonização" }
+        ]
     };
 
     function updateCopy() {
-        // Top Bar
         const topBar = document.querySelector('div.bg-primary.text-primary-foreground') || document.querySelector('.bg-primary');
         if (topBar) {
             const p = topBar.querySelector('p');
@@ -33,7 +37,6 @@
             else topBar.textContent = NEW_COPY.topBar;
         }
 
-        // Hero
         const h1 = document.querySelector('h1');
         if (h1) h1.textContent = NEW_COPY.hero.headline;
 
@@ -52,7 +55,6 @@
             socialProof.textContent = NEW_COPY.hero.socialProof;
         }
 
-        // Sections
         const sections = document.querySelectorAll('main section');
         sections.forEach(section => {
             const h2 = section.querySelector('h2');
@@ -106,20 +108,32 @@
 
     function addTestimonials() {
         const testimonialSection = Array.from(document.querySelectorAll('section')).find(s => s.textContent.includes('O que dizem nossos clientes'));
-        if (testimonialSection && !testimonialSection.dataset.fixed) {
+        if (testimonialSection && !testimonialSection.dataset.fixedReal) {
             const container = testimonialSection.querySelector('.grid') || testimonialSection.querySelector('.flex');
             if (container && container.children.length > 0) {
-                testimonialSection.dataset.fixed = "true";
+                testimonialSection.dataset.fixedReal = "true";
                 container.className = "flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 no-scrollbar";
                 container.style.display = "flex";
                 container.style.overflowX = "auto";
                 
                 const original = container.children[0];
-                for (let i = 0; i < 3; i++) {
+                container.innerHTML = ''; // Clear original to rebuild with real data
+                
+                NEW_COPY.testimonials.forEach(data => {
                     const clone = original.cloneNode(true);
-                    clone.className += " shrink-0 w-[85%] md:w-[400px] snap-center";
+                    clone.className = "shrink-0 w-[85%] md:w-[400px] snap-center bg-card p-6 rounded-xl border border-border flex flex-col justify-between";
+                    
+                    const textEl = clone.querySelector('p') || clone.querySelector('blockquote');
+                    if (textEl) textEl.textContent = `"${data.text}"`;
+                    
+                    const authorEl = Array.from(clone.querySelectorAll('span, div, p')).find(el => el.textContent.includes('Dr.') || el.textContent.includes('Dra.'));
+                    if (authorEl) authorEl.textContent = data.author;
+
+                    const specialtyEl = Array.from(clone.querySelectorAll('span, div, p')).find(el => el.textContent.includes('Harmonização') || el.textContent.includes('Odonto') || el.textContent.includes('Estética'));
+                    if (specialtyEl) specialtyEl.textContent = data.specialty;
+                    
                     container.appendChild(clone);
-                }
+                });
             }
         }
     }
@@ -134,7 +148,10 @@
         }, 100);
     });
 
-    observer.observe(document.getElementById('root'), { childList: true, subtree: true });
+    const root = document.getElementById('root');
+    if (root) {
+        observer.observe(root, { childList: true, subtree: true });
+    }
     updateCopy();
     setupAnimations();
     addTestimonials();
