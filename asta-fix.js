@@ -19,7 +19,7 @@
             ]
         },
         whatWeDo: {
-            title: "O que fazemos:",
+            title: "Um ecossistema completo de captação.",
             items: [
                 { title: "Tráfego pago", text: "Google Ads e Meta Ads com estratégia real de conversão." },
                 { title: "Presença digital", text: "Autoridade construída nos canais certos para sua especialidade." },
@@ -62,13 +62,20 @@
             const h2 = section.querySelector('h2');
             const p = section.querySelector('p');
             
-            // Renomear seção "Por que escolher ASTA" para "O que fazemos:"
+            // Seção Problema
             if (h2 && (h2.textContent.includes('indicação') || h2.textContent.includes('escolher') || h2.textContent.includes('Por que'))) {
-                h2.textContent = NEW_COPY.whatWeDo.title;
-                if (p && !p.textContent.includes('Indicação')) p.textContent = ""; // Limpar subtítulo se necessário
+                if (h2.textContent.includes('indicação') || section.textContent.includes('Indicação')) {
+                    h2.textContent = NEW_COPY.problem.title;
+                    if (p) p.textContent = NEW_COPY.problem.body;
+                } else {
+                    // Renomear seção "O que fazemos" (ex-Por que escolher)
+                    h2.textContent = "O que fazemos:";
+                    if (p) p.textContent = "";
+                }
             }
 
-            if (h2 && h2.textContent.includes('agenda cheia')) {
+            // Seção Como Funciona (Título e Itens únicos)
+            if (h2 && (h2.textContent.includes('agenda cheia') || h2.textContent.includes('Funciona'))) {
                 h2.textContent = NEW_COPY.howItWorks.title;
                 const items = section.querySelectorAll('div.grid > div');
                 items.forEach((item, i) => {
@@ -80,7 +87,9 @@
                     }
                 });
             }
-            if (h2 && (h2.textContent.includes('ecossistema') || h2.textContent.includes('fazemos'))) {
+
+            // Seção Ecossistema / O Que Fazemos (Título e Itens únicos)
+            if (h2 && (h2.textContent.includes('ecossistema') || h2.textContent.includes('completo'))) {
                 h2.textContent = NEW_COPY.whatWeDo.title;
                 const items = section.querySelectorAll('div.grid > div');
                 items.forEach((item, i) => {
@@ -97,7 +106,7 @@
 
     function addTestimonials() {
         const testimonialSection = Array.from(document.querySelectorAll('section')).find(s => s.textContent.includes('clientes') || s.textContent.includes('Histórias Reais'));
-        if (testimonialSection && !testimonialSection.dataset.fixedFinalPremiumFinalTitle) {
+        if (testimonialSection && !testimonialSection.dataset.fixedFinalPremiumFinalCorrectedV3) {
             const h2 = testimonialSection.querySelector('h2');
             if (h2) h2.textContent = NEW_COPY.testimonials.title;
 
@@ -106,7 +115,7 @@
 
             const container = testimonialSection.querySelector('.grid') || testimonialSection.querySelector('.flex') || testimonialSection.querySelector('div > div > div');
             if (container) {
-                testimonialSection.dataset.fixedFinalPremiumFinalTitle = "true";
+                testimonialSection.dataset.fixedFinalPremiumFinalCorrectedV3 = "true";
                 container.style.display = "grid";
                 container.style.gap = "20px";
                 container.className = "grid grid-cols-1 md:grid-cols-3 gap-6";
@@ -148,7 +157,6 @@
                         </div>
                         <span style="font-size: 32px; color: #00C8FF; opacity: 0.4; line-height: 1; margin-bottom: 4px; font-family: serif;">"</span>
                         <p style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 400; color: #C4CFDF; line-height: 1.7; margin-bottom: 0;">${data.text}</p>
-                        <div style="height: 1px; background: rgba(255, 255, 255, 0.08); width: 100%; margin-top: 24px; display: none;"></div>
                     </div>
                 `).join('');
             }
