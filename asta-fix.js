@@ -37,9 +37,9 @@
         testimonials: {
             title: "O que dizem nossos clientes.",
             items: [
-                { text: "Finalmente entendo de onde vêm meus pacientes. Isso mudou a forma como gerencio a clínica.", author: "Dr. J.S. · Odontologia" },
-                { text: "Minha clínica estava no mesmo nível há dois anos. Em poucos meses isso mudou.", author: "Dra. M.C. · Estética" },
-                { text: "Além dos pacientes, a organização interna da clínica mudou. Não esperava isso.", author: "Dra. A.P. · Harmonização" }
+                { text: "Finalmente entendo de onde vêm meus pacientes. Isso mudou a forma como gerencio a clínica.", name: "Dr. J.S.", spec: "Odontologia" },
+                { text: "Minha clínica estava no mesmo nível há dois anos. Em poucos meses isso mudou.", name: "Dra. M.C.", spec: "Estética" },
+                { text: "Além dos pacientes, a organização interna da clínica mudou. Não esperava isso.", name: "Dra. A.P.", spec: "Harmonização" }
             ]
         },
         footer: { desc: "Crescimento previsível para clínicas.", copyright: "© 2026 ASTA. Todos os direitos reservados." }
@@ -94,28 +94,60 @@
 
     function addTestimonials() {
         const testimonialSection = Array.from(document.querySelectorAll('section')).find(s => s.textContent.includes('clientes') || s.textContent.includes('Histórias Reais'));
-        if (testimonialSection && !testimonialSection.dataset.fixedFinalPremium) {
+        if (testimonialSection && !testimonialSection.dataset.fixedFinalPremiumFinal) {
             const h2 = testimonialSection.querySelector('h2');
             if (h2) h2.textContent = NEW_COPY.testimonials.title;
 
+            // Remover subtítulo desnecessário
+            const subtitle = Array.from(testimonialSection.querySelectorAll('p')).find(p => p.textContent.includes('Clínicas que transformaram'));
+            if (subtitle) subtitle.remove();
+
             const container = testimonialSection.querySelector('.grid') || testimonialSection.querySelector('.flex') || testimonialSection.querySelector('div > div > div');
             if (container) {
-                testimonialSection.dataset.fixedFinalPremium = "true";
-                container.style.display = "flex";
-                container.style.flexDirection = "row";
-                container.style.overflowX = "auto";
-                container.style.gap = "24px";
-                container.style.padding = "20px 20px 40px 20px";
-                container.style.scrollSnapType = "x mandatory";
-                container.style.webkitOverflowScrolling = "touch";
-                container.className = "flex overflow-x-auto snap-x snap-mandatory no-scrollbar";
+                testimonialSection.dataset.fixedFinalPremiumFinal = "true";
+                container.style.display = "grid";
+                container.style.gap = "20px";
+                container.className = "grid grid-cols-1 md:grid-cols-3 gap-6";
                 
+                // Estilos mobile via CSS injetado
+                const style = document.createElement('style');
+                style.textContent = `
+                    @media (max-width: 768px) {
+                        .testimonial-container-fix {
+                            display: flex !important;
+                            flex-direction: row !important;
+                            overflow-x: auto !important;
+                            scroll-snap-type: x mandatory !important;
+                            gap: 16px !important;
+                            padding-bottom: 20px !important;
+                        }
+                        .testimonial-card-fix {
+                            min-width: 85% !important;
+                            scroll-snap-align: center !important;
+                        }
+                    }
+                    .testimonial-card-fix {
+                        background: rgba(255, 255, 255, 0.04) !important;
+                        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                        border-radius: 12px !important;
+                        padding: 28px !important;
+                        height: auto !important;
+                        display: flex !important;
+                        flex-direction: column !important;
+                        transition: transform 0.3s ease !important;
+                    }
+                `;
+                document.head.appendChild(style);
+                container.classList.add('testimonial-container-fix');
+
                 container.innerHTML = NEW_COPY.testimonials.items.map(data => `
-                    <div class="shrink-0 w-[85%] md:w-[450px] snap-center bg-card p-10 rounded-[32px] border border-border flex flex-col shadow-xl" style="min-width: 85%; max-width: 85%; height: auto; min-height: 250px; opacity: 1 !important; transform: none !important; overflow: visible !important; background: rgba(255,255,255,0.03); backdrop-filter: blur(10px);">
-                        <div class="mb-6">
-                            <span class="font-bold text-primary text-xl block">${data.author}</span>
+                    <div class="testimonial-card-fix">
+                        <span style="font-size: 32px; color: #00C8FF; opacity: 0.4; line-height: 1; margin-bottom: 8px; font-family: serif;">"</span>
+                        <p style="font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 400; color: #C4CFDF; line-height: 1.7; margin-bottom: 24px;">${data.text}</p>
+                        <div style="height: 1px; background: rgba(255, 255, 255, 0.08); width: 100%; margin-top: auto; margin-bottom: 16px;"></div>
+                        <div style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: #00C8FF; letter-spacing: 0.06em; text-transform: uppercase;">
+                            ${data.name} · ${data.spec}
                         </div>
-                        <p class="text-lg italic text-foreground/90 leading-relaxed" style="white-space: normal !important; overflow: visible !important;">"${data.text}"</p>
                     </div>
                 `).join('');
             }
@@ -134,7 +166,7 @@
         }, { threshold: 0.1 });
 
         document.querySelectorAll('section, h1, h2, h3, p, button').forEach(el => {
-            if (el.closest('.snap-center')) return; 
+            if (el.closest('.testimonial-card-fix')) return; 
             el.style.opacity = '0';
             el.style.transform = 'translateY(20px)';
             el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
