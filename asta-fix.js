@@ -61,12 +61,10 @@
         document.querySelectorAll('main section').forEach(section => {
             const h2 = section.querySelector('h2');
             const p = section.querySelector('p');
-            
             if (h2 && (h2.textContent.includes('indicação') || h2.textContent.includes('escolher'))) {
                 h2.textContent = NEW_COPY.problem.title;
                 if (p) p.textContent = NEW_COPY.problem.body;
             }
-            
             if (h2 && h2.textContent.includes('agenda cheia')) {
                 h2.textContent = NEW_COPY.howItWorks.title;
                 const items = section.querySelectorAll('div.grid > div');
@@ -79,7 +77,6 @@
                     }
                 });
             }
-
             if (h2 && (h2.textContent.includes('ecossistema') || h2.textContent.includes('fazemos'))) {
                 h2.textContent = NEW_COPY.whatWeDo.title;
                 const items = section.querySelectorAll('div.grid > div');
@@ -97,25 +94,27 @@
 
     function addTestimonials() {
         const testimonialSection = Array.from(document.querySelectorAll('section')).find(s => s.textContent.includes('clientes') || s.textContent.includes('Histórias Reais'));
-        if (testimonialSection && !testimonialSection.dataset.fixedFinal) {
+        if (testimonialSection && !testimonialSection.dataset.fixedFinalUX) {
             const h2 = testimonialSection.querySelector('h2');
             if (h2) h2.textContent = NEW_COPY.testimonials.title;
 
             const container = testimonialSection.querySelector('.grid') || testimonialSection.querySelector('.flex') || testimonialSection.querySelector('div > div > div');
             if (container) {
-                testimonialSection.dataset.fixedFinal = "true";
+                testimonialSection.dataset.fixedFinalUX = "true";
                 container.style.display = "flex";
                 container.style.flexDirection = "row";
                 container.style.overflowX = "auto";
-                container.style.gap = "24px";
-                container.style.paddingBottom = "32px";
+                container.style.gap = "20px";
+                container.style.padding = "20px 0 40px 0";
+                container.style.scrollSnapType = "x mandatory";
+                container.style.webkitOverflowScrolling = "touch";
                 container.className = "flex overflow-x-auto snap-x snap-mandatory no-scrollbar";
                 
                 container.innerHTML = NEW_COPY.testimonials.items.map(data => `
-                    <div class="shrink-0 w-[85%] md:w-[400px] snap-center bg-card p-8 rounded-2xl border border-border flex flex-col justify-between shadow-sm" style="min-width: 85%; opacity: 1 !important; transform: none !important;">
-                        <p class="text-lg italic text-foreground mb-6">"${data.text}"</p>
-                        <div class="flex flex-col">
-                            <span class="font-bold text-primary">${data.author}</span>
+                    <div class="shrink-0 w-[85%] md:w-[450px] snap-center bg-card p-8 rounded-2xl border border-border flex flex-col shadow-md" style="min-width: 85%; max-width: 85%; height: auto; min-height: 220px; opacity: 1 !important; transform: none !important; overflow: visible !important;">
+                        <p class="text-lg italic text-foreground mb-6" style="white-space: normal !important; overflow: visible !important;">"${data.text}"</p>
+                        <div class="mt-auto">
+                            <span class="font-bold text-primary block">${data.author}</span>
                         </div>
                     </div>
                 `).join('');
@@ -135,7 +134,7 @@
         }, { threshold: 0.1 });
 
         document.querySelectorAll('section, h1, h2, h3, p, button').forEach(el => {
-            if (el.closest('.snap-center')) return; // Pular depoimentos para evitar tela branca neles
+            if (el.closest('.snap-center')) return; 
             el.style.opacity = '0';
             el.style.transform = 'translateY(20px)';
             el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
