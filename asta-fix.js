@@ -30,11 +30,18 @@
     };
 
     function updateCopy() {
-        const topBar = document.querySelector('div.bg-primary.text-primary-foreground') || document.querySelector('.bg-primary');
+        // Correção: Selecionar apenas a barra de aviso real, não a barra de progresso de 2px
+        const topBar = Array.from(document.querySelectorAll('div.bg-primary')).find(el => el.offsetHeight > 10);
         if (topBar) {
             const p = topBar.querySelector('p');
             if (p) p.textContent = NEW_COPY.topBar;
-            else topBar.textContent = NEW_COPY.topBar;
+            else if (topBar.children.length === 0) topBar.textContent = NEW_COPY.topBar;
+        }
+
+        // Garantir que a barra de progresso (h-[2px]) não tenha texto
+        const progressBar = document.querySelector('div.h-\\[2px\\]');
+        if (progressBar) {
+            progressBar.textContent = '';
         }
 
         const h1 = document.querySelector('h1');
@@ -97,7 +104,7 @@
         }, { threshold: 0.1 });
 
         document.querySelectorAll('section, h1, h2, h3, p, button').forEach(el => {
-            if (!el.classList.contains('animated') && !el.closest('nav')) {
+            if (!el.classList.contains('animated') && !el.closest('nav') && !el.closest('header')) {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(20px)';
                 el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
@@ -117,7 +124,7 @@
                 container.style.overflowX = "auto";
                 
                 const original = container.children[0];
-                container.innerHTML = ''; // Clear original to rebuild with real data
+                container.innerHTML = ''; 
                 
                 NEW_COPY.testimonials.forEach(data => {
                     const clone = original.cloneNode(true);
