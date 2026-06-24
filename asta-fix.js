@@ -94,28 +94,28 @@
 
     function addTestimonials() {
         const testimonialSection = Array.from(document.querySelectorAll('section')).find(s => s.textContent.includes('clientes') || s.textContent.includes('Histórias Reais'));
-        if (testimonialSection && !testimonialSection.dataset.fixedFinalUX) {
+        if (testimonialSection && !testimonialSection.dataset.fixedFinalPremium) {
             const h2 = testimonialSection.querySelector('h2');
             if (h2) h2.textContent = NEW_COPY.testimonials.title;
 
             const container = testimonialSection.querySelector('.grid') || testimonialSection.querySelector('.flex') || testimonialSection.querySelector('div > div > div');
             if (container) {
-                testimonialSection.dataset.fixedFinalUX = "true";
+                testimonialSection.dataset.fixedFinalPremium = "true";
                 container.style.display = "flex";
                 container.style.flexDirection = "row";
                 container.style.overflowX = "auto";
-                container.style.gap = "20px";
-                container.style.padding = "20px 0 40px 0";
+                container.style.gap = "24px";
+                container.style.padding = "20px 20px 40px 20px";
                 container.style.scrollSnapType = "x mandatory";
                 container.style.webkitOverflowScrolling = "touch";
                 container.className = "flex overflow-x-auto snap-x snap-mandatory no-scrollbar";
                 
                 container.innerHTML = NEW_COPY.testimonials.items.map(data => `
-                    <div class="shrink-0 w-[85%] md:w-[450px] snap-center bg-card p-8 rounded-2xl border border-border flex flex-col shadow-md" style="min-width: 85%; max-width: 85%; height: auto; min-height: 220px; opacity: 1 !important; transform: none !important; overflow: visible !important;">
-                        <p class="text-lg italic text-foreground mb-6" style="white-space: normal !important; overflow: visible !important;">"${data.text}"</p>
-                        <div class="mt-auto">
-                            <span class="font-bold text-primary block">${data.author}</span>
+                    <div class="shrink-0 w-[85%] md:w-[450px] snap-center bg-card p-10 rounded-[32px] border border-border flex flex-col shadow-xl" style="min-width: 85%; max-width: 85%; height: auto; min-height: 250px; opacity: 1 !important; transform: none !important; overflow: visible !important; background: rgba(255,255,255,0.03); backdrop-filter: blur(10px);">
+                        <div class="mb-6">
+                            <span class="font-bold text-primary text-xl block">${data.author}</span>
                         </div>
+                        <p class="text-lg italic text-foreground/90 leading-relaxed" style="white-space: normal !important; overflow: visible !important;">"${data.text}"</p>
                     </div>
                 `).join('');
             }
