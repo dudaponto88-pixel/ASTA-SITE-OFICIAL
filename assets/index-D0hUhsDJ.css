@@ -76,3 +76,27 @@
         min-width: 30% !important;
     }
 }
+
+/* CORREÇÃO DE ANIMAÇÕES BUGADAS */
+[data-aos], .animate-on-scroll, .fade-in-section {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Nova animação suave que roda apenas UMA vez no carregamento */
+.hero-content, .service-card, .testimonial-item {
+    animation: simpleFadeIn 0.8s ease-out forwards;
+}
+
+@keyframes simpleFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Remover qualquer efeito de hover que cause 'pulo' ou repetição estranha */
+.testimonial-item:hover {
+    transform: translateY(-5px) !important;
+    transition: transform 0.3s ease !important;
+}
