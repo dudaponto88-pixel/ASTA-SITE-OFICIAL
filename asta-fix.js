@@ -51,10 +51,11 @@
         if (progressBar) progressBar.remove();
 
         // 2. Atualizar Navegação
-        const whyLink = Array.from(document.querySelectorAll('nav a, header a')).find(el => el.textContent.includes('Por que') || el.textContent.includes('fazemos'));
-        if (whyLink && whyLink.textContent !== NEW_COPY.nav.why) {
-            whyLink.textContent = NEW_COPY.nav.why;
-        }
+        document.querySelectorAll('nav a, header a').forEach(el => {
+            if (el.textContent.includes('Por que') || el.textContent.includes('fazemos')) {
+                if (el.textContent !== NEW_COPY.nav.why) el.textContent = NEW_COPY.nav.why;
+            }
+        });
 
         // 3. Hero Section
         const h1 = document.querySelector('h1');
@@ -67,73 +68,71 @@
             const h2 = section.querySelector('h2');
             const p = section.querySelector('p');
             
-            // Remover seções duplicadas ou indesejadas marcadas no vídeo (NOSSOS DIFERENCIAIS)
-            if (h2 && h2.textContent.includes('DIFERENCIAIS')) {
+            // REMOVER SEÇÃO "NOSSOS DIFERENCIAIS" (marcada com X azul no vídeo)
+            if (h2 && h2.textContent.toUpperCase().includes('DIFERENCIAIS')) {
                 section.remove();
                 return;
             }
 
-            // Seção Problema / Solução
-            if (h2 && (h2.textContent.includes('indicação') || h2.textContent.includes('escolher') || h2.textContent.includes('Por que'))) {
-                if (h2.textContent.includes('indicação') || section.textContent.includes('Indicação')) {
-                    if (h2.textContent !== NEW_COPY.problem.title) h2.textContent = NEW_COPY.problem.title;
-                    if (p && p.textContent !== NEW_COPY.problem.body) p.textContent = NEW_COPY.problem.body;
-                } else {
-                    // Esta seção será "Veja tudo o que fazemos pela sua clínica"
-                    if (h2.textContent !== NEW_COPY.whatWeDo.title) h2.textContent = NEW_COPY.whatWeDo.title;
-                    if (p) p.textContent = "";
-                    // Remover ícone de alvo acima do título se existir
-                    const icon = section.querySelector('svg, img');
-                    if (icon && icon.parentElement.contains(h2)) icon.remove();
-                }
+            // Seção "Por que escolher ASTA" -> Mudar para "Veja tudo o que fazemos pela sua clínica"
+            if (h2 && (h2.textContent.includes('escolher') || h2.textContent.includes('Por que'))) {
+                h2.textContent = NEW_COPY.whatWeDo.title;
+                // Remover ícone de alvo acima do título se existir
+                const icon = section.querySelector('svg, img');
+                if (icon) icon.remove();
+                if (p) p.textContent = "";
             }
 
-            // Seção O QUE FAZEMOS (Ecossistema) - Evitar flickering com trava de dataset
-            if (h2 && (h2.textContent.includes('ecossistema') || h2.textContent.includes('fazemos') || h2.textContent.includes('fazemos pela sua clínica'))) {
-                if (h2.textContent !== NEW_COPY.whatWeDo.title) h2.textContent = NEW_COPY.whatWeDo.title;
+            // Seção O QUE FAZEMOS (Ecossistema) - Evitar flickering
+            if (h2 && (h2.textContent.includes('ecossistema') || h2.textContent.includes('fazemos pela sua clínica'))) {
+                h2.textContent = NEW_COPY.whatWeDo.title;
                 const items = section.querySelectorAll('div.grid > div');
                 items.forEach((item, i) => {
-                    if (NEW_COPY.whatWeDo.items[i] && item.dataset.fixed !== "true") {
+                    if (NEW_COPY.whatWeDo.items[i]) {
                         const h3 = item.querySelector('h3');
                         const itemP = item.querySelector('p');
-                        if (h3) h3.textContent = NEW_COPY.whatWeDo.items[i].title;
-                        if (itemP) itemP.textContent = NEW_COPY.whatWeDo.items[i].text;
-                        item.dataset.fixed = "true"; // Trava para evitar flickering
+                        if (h3 && h3.textContent !== NEW_COPY.whatWeDo.items[i].title) {
+                            h3.textContent = NEW_COPY.whatWeDo.items[i].title;
+                        }
+                        if (itemP && itemP.textContent !== NEW_COPY.whatWeDo.items[i].text) {
+                            itemP.textContent = NEW_COPY.whatWeDo.items[i].text;
+                        }
                     }
                 });
             }
 
             // Seção COMO FUNCIONA
             if (h2 && (h2.textContent.includes('agenda cheia') || h2.textContent.includes('Funciona'))) {
-                if (h2.textContent !== NEW_COPY.howItWorks.title) h2.textContent = NEW_COPY.howItWorks.title;
+                h2.textContent = NEW_COPY.howItWorks.title;
                 const items = section.querySelectorAll('div.grid > div');
                 items.forEach((item, i) => {
-                    if (NEW_COPY.howItWorks.items[i] && item.dataset.fixed !== "true") {
+                    if (NEW_COPY.howItWorks.items[i]) {
                         const h3 = item.querySelector('h3');
                         const itemP = item.querySelector('p');
-                        if (h3) h3.textContent = NEW_COPY.howItWorks.items[i].title;
-                        if (itemP) itemP.textContent = NEW_COPY.howItWorks.items[i].text;
-                        item.dataset.fixed = "true"; // Trava para evitar flickering
+                        if (h3 && h3.textContent !== NEW_COPY.howItWorks.items[i].title) {
+                            h3.textContent = NEW_COPY.howItWorks.items[i].title;
+                        }
+                        if (itemP && itemP.textContent !== NEW_COPY.howItWorks.items[i].text) {
+                            itemP.textContent = NEW_COPY.howItWorks.items[i].text;
+                        }
                     }
                 });
             }
         });
 
-        // 5. Depoimentos Premium corrigidos
+        // 5. Depoimentos Premium corrigidos (sem aspas e nome no topo)
         const testimonialSection = Array.from(document.querySelectorAll('section')).find(s => s.textContent.includes('clientes') || s.textContent.includes('Histórias Reais'));
-        if (testimonialSection && !testimonialSection.dataset.finalPremiumV5) {
+        if (testimonialSection && !testimonialSection.dataset.finalFixedV7) {
             const h2 = testimonialSection.querySelector('h2');
             if (h2) h2.textContent = NEW_COPY.testimonials.title;
-            const subtitle = Array.from(testimonialSection.querySelectorAll('p')).find(p => p.textContent.includes('Clínicas que transformaram'));
-            if (subtitle) subtitle.remove();
-
+            
             const container = testimonialSection.querySelector('.grid') || testimonialSection.querySelector('.flex') || testimonialSection.querySelector('div > div > div');
             if (container) {
-                testimonialSection.dataset.finalPremiumV5 = "true";
+                testimonialSection.dataset.finalFixedV7 = "true";
                 container.className = "grid grid-cols-1 md:grid-cols-3 gap-6 testimonial-container-fix";
                 container.innerHTML = NEW_COPY.testimonials.items.map(data => `
-                    <div class="testimonial-card-fix" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 28px; display: flex; flex-direction: column;">
-                        <div style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: #00C8FF; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px;">
+                    <div class="testimonial-card-fix" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 28px; display: flex; flex-direction: column; height: auto;">
+                        <div style="font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: #00C8FF; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px;">
                             ${data.name} · ${data.spec}
                         </div>
                         <div style="width: 100%; height: 1px; background: rgba(255, 255, 255, 0.08); margin-bottom: 16px;"></div>
@@ -144,7 +143,7 @@
         }
     }
 
-    // Estilos para evitar flickering e garantir layout
+    // Estilos para responsividade
     const style = document.createElement('style');
     style.textContent = `
         @media (max-width: 768px) {
@@ -154,6 +153,7 @@
                 overflow-x: auto !important;
                 scroll-snap-type: x mandatory !important;
                 gap: 16px !important;
+                padding-bottom: 20px !important;
             }
             .testimonial-card-fix {
                 min-width: 85% !important;
@@ -163,18 +163,12 @@
     `;
     document.head.appendChild(style);
 
-    // MutationObserver para garantir que as mudanças persistam mesmo com re-render do React
-    const observer = new MutationObserver(() => {
-        applyFixes();
-    });
-
+    // MutationObserver para persistência
+    const observer = new MutationObserver(applyFixes);
     const root = document.getElementById('root');
-    if (root) {
-        observer.observe(root, { childList: true, subtree: true });
-    }
+    if (root) observer.observe(root, { childList: true, subtree: true });
 
-    // Execução imediata e em intervalos curtos para garantir estabilidade inicial
+    // Execução
     applyFixes();
-    setTimeout(applyFixes, 500);
-    setTimeout(applyFixes, 1500);
+    setInterval(applyFixes, 1000); // Força a correção a cada segundo para evitar qualquer flickering do React
 })();
