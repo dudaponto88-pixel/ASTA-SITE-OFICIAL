@@ -11,7 +11,7 @@
         problem: { title: "", body: "Indicação não escala. Enquanto isso, pacientes estão pesquisando no Google e no Instagram e escolhendo quem aparece primeiro." },
         solution: { body: "Antes de qualquer campanha, entendemos sua clínica. Quais procedimentos têm mais margem, quem é seu paciente ideal, onde está a perda de captação hoje. Só depois disso agimos." },
         whatWeDo: {
-            title: "Veja tudo o que fazemos pela sua clínica",
+            title: "Veja tudo o que fazemos pela sua empresa",
             items: [
                 { title: "Tráfego pago", text: "Google Ads e Meta Ads com estratégia real de conversão." },
                 { title: "Presença digital", text: "Autoridade construída nos canais certos para sua especialidade." },
@@ -25,7 +25,7 @@
             title: "Da análise à agenda cheia.",
             items: [
                 { title: "Diagnóstico", text: "Mapeamos sua clínica, seu mercado e seus concorrentes. Identificamos o que está travando seu crescimento." },
-                { title: "Estratégia", text: "Um plano construído para a sua realidade. Canal certo, mensagem certa, paciente certo." },
+                { title: "Estrategia", text: "Um plano construído para a sua realidade. Canal certo, mensagem certa, paciente certo." },
                 { title: "Execução", text: "Implementamos, acompanhamos diariamente e ajustamos. Você acompanha tudo em tempo real." }
             ]
         },
@@ -68,35 +68,32 @@
             const h2 = section.querySelector('h2');
             const p = section.querySelector('p');
             
-            // REMOVER SEÇÃO "NOSSOS DIFERENCIAIS" (marcada com X azul no vídeo)
+            // REMOVER SEÇÃO "NOSSOS DIFERENCIAIS"
             if (h2 && h2.textContent.toUpperCase().includes('DIFERENCIAIS')) {
-                section.remove();
+                section.style.display = 'none';
                 return;
             }
 
-            // Seção "Por que escolher ASTA" -> Mudar para "Veja tudo o que fazemos pela sua clínica"
+            // Seção "Por que escolher ASTA" -> "Veja tudo o que fazemos pela sua empresa"
             if (h2 && (h2.textContent.includes('escolher') || h2.textContent.includes('Por que'))) {
-                h2.textContent = NEW_COPY.whatWeDo.title;
-                // Remover ícone de alvo acima do título se existir
-                const icon = section.querySelector('svg, img');
-                if (icon) icon.remove();
-                if (p) p.textContent = "";
+                if (h2.textContent !== NEW_COPY.whatWeDo.title) {
+                    h2.textContent = NEW_COPY.whatWeDo.title;
+                    const icon = section.querySelector('svg, img');
+                    if (icon) icon.style.display = 'none';
+                    if (p) p.textContent = "";
+                }
             }
 
-            // Seção O QUE FAZEMOS (Ecossistema) - Evitar flickering
-            if (h2 && (h2.textContent.includes('ecossistema') || h2.textContent.includes('fazemos pela sua clínica'))) {
-                h2.textContent = NEW_COPY.whatWeDo.title;
+            // Seção O QUE FAZEMOS (Ecossistema)
+            if (h2 && (h2.textContent.includes('ecossistema') || h2.textContent.includes('fazemos pela sua empresa'))) {
+                h2.textContent = "Um ecossistema completo de captação.";
                 const items = section.querySelectorAll('div.grid > div');
                 items.forEach((item, i) => {
                     if (NEW_COPY.whatWeDo.items[i]) {
                         const h3 = item.querySelector('h3');
                         const itemP = item.querySelector('p');
-                        if (h3 && h3.textContent !== NEW_COPY.whatWeDo.items[i].title) {
-                            h3.textContent = NEW_COPY.whatWeDo.items[i].title;
-                        }
-                        if (itemP && itemP.textContent !== NEW_COPY.whatWeDo.items[i].text) {
-                            itemP.textContent = NEW_COPY.whatWeDo.items[i].text;
-                        }
+                        if (h3 && h3.textContent !== NEW_COPY.whatWeDo.items[i].title) h3.textContent = NEW_COPY.whatWeDo.items[i].title;
+                        if (itemP && itemP.textContent !== NEW_COPY.whatWeDo.items[i].text) itemP.textContent = NEW_COPY.whatWeDo.items[i].text;
                     }
                 });
             }
@@ -109,26 +106,22 @@
                     if (NEW_COPY.howItWorks.items[i]) {
                         const h3 = item.querySelector('h3');
                         const itemP = item.querySelector('p');
-                        if (h3 && h3.textContent !== NEW_COPY.howItWorks.items[i].title) {
-                            h3.textContent = NEW_COPY.howItWorks.items[i].title;
-                        }
-                        if (itemP && itemP.textContent !== NEW_COPY.howItWorks.items[i].text) {
-                            itemP.textContent = NEW_COPY.howItWorks.items[i].text;
-                        }
+                        if (h3 && h3.textContent !== NEW_COPY.howItWorks.items[i].title) h3.textContent = NEW_COPY.howItWorks.items[i].title;
+                        if (itemP && itemP.textContent !== NEW_COPY.howItWorks.items[i].text) itemP.textContent = NEW_COPY.howItWorks.items[i].text;
                     }
                 });
             }
         });
 
-        // 5. Depoimentos Premium corrigidos (sem aspas e nome no topo)
+        // 5. Depoimentos Premium corrigidos
         const testimonialSection = Array.from(document.querySelectorAll('section')).find(s => s.textContent.includes('clientes') || s.textContent.includes('Histórias Reais'));
-        if (testimonialSection && !testimonialSection.dataset.finalFixedV7) {
+        if (testimonialSection && !testimonialSection.dataset.finalFixedV8) {
             const h2 = testimonialSection.querySelector('h2');
             if (h2) h2.textContent = NEW_COPY.testimonials.title;
             
             const container = testimonialSection.querySelector('.grid') || testimonialSection.querySelector('.flex') || testimonialSection.querySelector('div > div > div');
             if (container) {
-                testimonialSection.dataset.finalFixedV7 = "true";
+                testimonialSection.dataset.finalFixedV8 = "true";
                 container.className = "grid grid-cols-1 md:grid-cols-3 gap-6 testimonial-container-fix";
                 container.innerHTML = NEW_COPY.testimonials.items.map(data => `
                     <div class="testimonial-card-fix" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 28px; display: flex; flex-direction: column; height: auto;">
@@ -143,7 +136,6 @@
         }
     }
 
-    // Estilos para responsividade
     const style = document.createElement('style');
     style.textContent = `
         @media (max-width: 768px) {
@@ -163,12 +155,10 @@
     `;
     document.head.appendChild(style);
 
-    // MutationObserver para persistência
     const observer = new MutationObserver(applyFixes);
     const root = document.getElementById('root');
     if (root) observer.observe(root, { childList: true, subtree: true });
 
-    // Execução
     applyFixes();
-    setInterval(applyFixes, 1000); // Força a correção a cada segundo para evitar qualquer flickering do React
+    setInterval(applyFixes, 500); // Frequência aumentada para combater o flickering agressivo
 })();
